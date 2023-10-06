@@ -30,14 +30,40 @@
 // console.log(gen.next());
 // console.log(gen.next());
 
-function* genFileNames() {
-    let index = 0
-    while (true) {
-        yield `file${index++}.jpg`;
+// function* genFileNames(): Generator<string> {
+//     let index = 0
+//     while (true) {
+//         yield `file${index++}.jpg`;
+//     }
+// }
+//
+// const fileGen = genFileNames();
+// console.log(fileGen.next().value);
+// console.log(fileGen.next().value);
+// console.log(fileGen.next());
+
+function* team1(n: number): Generator<string> {
+    for (let i = 1; i <= n; i++) {
+        yield `team1 -- worker ${i}`;
     }
 }
 
-const fileGen = genFileNames();
-console.log(fileGen.next().value);
-console.log(fileGen.next().value);
-console.log(fileGen.next());
+function* team2(n: number): Generator<string> {
+    for (let i = 1; i <= n; i++) {
+        yield `team2 -- worker ${i}`;
+    }
+}
+
+const teams = [team1(5), team2(8)];
+
+while (teams.length) {
+    const team = teams.shift();
+    const next = team.next();
+
+    if (next.done) {
+        continue;
+    }
+
+    console.log(next.value);
+    teams.push(team);
+}
