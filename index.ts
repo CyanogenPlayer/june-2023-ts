@@ -1,117 +1,43 @@
-// const asd = (arrOfNums: string) => {
-//     console.log(arrOfNums);
-// }
-
-// interface IUser<T> {
-//     id?: number,
-//     name: string,
-//     age: number,
-//     work: T[]
+// function asd() {
+//     const a = 5;
+//     return a;
+//     console.log('!!!');
 // }
 //
-// const user: IUser<number> = {name: 'max', age: 5, work: [1, 3, 4]};
-// const user2: Partial<IUser<string>> = {id: 1, work: ['1', '3']};
+// console.log(asd());
 
-// interface IUserTools {
-//     sayHello(): void;
+// function* asd() {
+//     const a = 5;
+//     yield a;
+//     console.log('!!!');
 // }
 //
-// class User implements IUserTools {
-//     private name: string
-//     age: number
-//
-//     constructor(name: string, age: number) {
-//         this.age = age;
-//         this.name = name;
-//     }
-//
-//     getName(): string {
-//         return this.name;
-//     }
-//
-//     sayHello(): void {
-//         console.log('hello');
-//     }
+// const gen = asd();
+// const next = gen.next();
+// console.log(next);
+// const next2 = gen.next();
+// console.log(next2);
+
+// function* asd() {
+//     yield 1;
+//     yield 2;
+//     yield 3;
 // }
 //
-// const user = new User('max', 12);
-// console.log(user.getName(), user.age);
-// user.sayHello();
+// const gen = asd();
+// console.log(gen.next());
+// console.log(gen.next());
+// console.log(gen.next());
+// console.log(gen.next());
 
-interface IUser {
-    id: number;
-    name: string;
-    age: number;
-}
-
-type IUserForm = Pick<IUser, 'name' | 'age'>
-
-class UserService {
-    private static readonly _usersKey = 'users';
-
-    private static _getAll(): IUser[] {
-        return JSON.parse(localStorage.getItem(this._usersKey)) || [
-            {id: 1, name: 'Max', age: 5}
-        ];
-    }
-
-    static create(data: IUserForm): void {
-        const users = this._getAll();
-        const id = users.length ? users.slice(-1)[0].id + 1 : 1;
-        users.push({id, ...data});
-        this._setToStorage(users);
-    }
-
-    static render(): void {
-        const userContainer = document.querySelector('#userContainer') as HTMLDivElement;
-        userContainer.innerHTML = '';
-        const users = this._getAll();
-
-        const usersHtmlContent = users.map(user => {
-            const div = document.createElement('div');
-            const button = document.createElement('button');
-            button.onclick = () => {
-                this.deleteById(user.id);
-            }
-            button.innerText = 'delete';
-            div.innerText = `${user.id}) ${user.name} -- ${user.age}`;
-            div.appendChild(button);
-            return div;
-        });
-
-        if (usersHtmlContent.length) {
-            userContainer.append(...usersHtmlContent);
-        } else {
-            userContainer.innerText = 'Users not found!';
-        }
-    }
-
-    private static _setToStorage(data: IUser[]): void {
-        localStorage.setItem(this._usersKey, JSON.stringify(data));
-        this.render();
-    }
-
-    static deleteById(id: number): void {
-        const users = this._getAll();
-        const index = users.findIndex(user => user.id == id);
-        users.splice(index, 1);
-        this._setToStorage(users);
+function* genFileNames() {
+    let index = 0
+    while (true) {
+        yield `file${index++}.jpg`;
     }
 }
 
-UserService.render();
-
-interface IInputs {
-    name: HTMLInputElement;
-    age: HTMLInputElement;
-}
-
-const form = document.forms.namedItem('userForm') as HTMLFormElement;
-form.onsubmit = (e) => {
-    e.preventDefault();
-    // const {name, age} = form as any as IInputs;
-    const {name: {value: name}, age: {value: age}} = form as any as Record<keyof IUserForm, HTMLInputElement>
-
-    UserService.create({name, age: +age});
-    form.reset();
-}
+const fileGen = genFileNames();
+console.log(fileGen.next().value);
+console.log(fileGen.next().value);
+console.log(fileGen.next());
