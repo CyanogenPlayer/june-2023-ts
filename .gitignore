@@ -6,6 +6,8 @@
 /dataSources/
 /dataSources.local.xml
 
+newbie.iml
+
 lib-cov
 *.seed
 *.log
